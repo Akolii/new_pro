@@ -1,0 +1,29 @@
+name: Deploy Project
+
+on:
+  push:
+    branches:
+      - main # workflow запускается при пуше в main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build project
+        run: yarn build
+
+      # Пример деплоя на Vercel через Yarn
+      - name: Deploy to Vercel
+        run: yarn vercel --prod --token ${{ secrets.VERCEL_TOKEN }}

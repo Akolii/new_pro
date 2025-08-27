@@ -1,9 +1,12 @@
-name: Deploy to GitHub Pages
+name: CI/CD
 
 on:
   push:
     branches:
-      - main # триггер на пуш в main
+      - main # Запускать на пуш в main
+  pull_request:
+    branches:
+      - main # Запускать на PR в main
 
 jobs:
   build:
@@ -16,16 +19,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: "20" # версия Node.js
+          cache: "yarn"
 
       - name: Install dependencies
         run: yarn install
 
+      - name: Run tests
+        run: yarn test
+
       - name: Build project
         run: yarn build
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
